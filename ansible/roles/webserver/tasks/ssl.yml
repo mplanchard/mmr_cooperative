@@ -1,0 +1,34 @@
+---
+
+# File: roles/webserver/tasks/ssl.yml
+
+# Note that this sets the `cert_path` and `key_path` facts, which will later
+# be used in the webserver playbook.
+
+- include_vars: vault/{{ deploy_environment }}.yml
+
+- name: set cert_path variable
+  set_fact:
+    cert_path: /etc/ssl/certs/{{ ssl_cert.name }}
+- name: set key_path variable
+  set_fact:
+    key_path: /etc/ssl/private/{{ ssl_key.name }}
+
+- block:
+  - name: add ssl cert
+    copy:
+      dest: "{{ cert_path }}"
+      content: "{{ ssl_cert.content }}"
+      owner: "{{ ssl_cert.owner }}"
+      mode: 0644
+    notify: restart nginx
+  - name: add ssl key
+    copy:
+      dest: "{{ key_path }}"
+      content: "{{ ssl_key.content }}"
+      owner: "{{ ssl_key.owner }}"
+      mode: 0640
+    notify: restart nginx
+  become: yes
+  no_log: yes
+  when: ansible_distribution == 'Ubuntu'

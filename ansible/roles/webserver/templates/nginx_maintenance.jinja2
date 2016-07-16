@@ -1,0 +1,15 @@
+server {
+  listen 80;
+  listen 443;
+  server_name  {{ server_name }};
+  root {{ utility_doc_root }};
+
+  location / {
+      return 503;
+  }
+
+  error_page 503 @maintenance;
+  location @maintenance {
+     rewrite (.*) /maintenance.html break;
+  }
+}

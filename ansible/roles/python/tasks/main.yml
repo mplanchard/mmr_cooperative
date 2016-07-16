@@ -1,0 +1,4 @@
+---
+# file: roles/python/tasks/main.yml
+
+- include: packages.yml

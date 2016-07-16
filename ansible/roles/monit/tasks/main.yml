@@ -1,0 +1,9 @@
+---
+
+# Tasks for the monit role
+
+# This role assumes you have a monit_monitor variable defined with a list of
+# dicts containing `name` and `state` keys
+
+- include: install_monit.yml
+- include: monitor_applications.yml

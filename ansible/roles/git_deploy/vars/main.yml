@@ -1,0 +1,2 @@
+---
+git_rsa_path: "/home/{{ git_user }}/.ssh/git_rsa"

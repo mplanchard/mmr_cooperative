@@ -1,0 +1,22 @@
+---
+
+# File: roles/base/tasks/groups.yml
+# Add sysadmin group
+
+- name: manage groups
+  become: yes
+  group:
+   name: "{{ item.name }}"
+   state: "{{ item.state }}"
+  with_items: "{{ managed_groups + extra_groups }}"
+
+- name: manage group sudo access
+  become: yes
+  lineinfile:
+    dest: /etc/sudoers
+    state: "{{ item.state }}"
+    insertafter: EOF
+    regexp: "^%{{ item.name }}"
+    line: "%{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
+  with_items: "{{ managed_groups + extra_groups }}"
+  when: item.sudo

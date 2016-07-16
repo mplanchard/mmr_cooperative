@@ -1,0 +1,10 @@
+---
+
+# monitor_applicaitons.yml
+
+- name: configure monit applications
+  become: yes
+  monit:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items: "{{ monit_monitor }}"

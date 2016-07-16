@@ -1,0 +1,6 @@
+---
+# file: roles/base/tasks/main.yml
+
+- include: groups.yml
+- include: users.yml
+- include: packages.yml

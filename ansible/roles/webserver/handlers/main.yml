@@ -1,0 +1,15 @@
+---
+
+- name: reload systemctl units
+  become: yes
+  shell: systemctl daemon-reload
+- name: restart nginx
+  become: yes
+  service:
+    name: nginx
+    state: restarted
+- name: restart emperor
+  become: yes
+  service:
+    name: emperor.uwsgi.service
+    state: restarted

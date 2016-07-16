@@ -1,0 +1,13 @@
+---
+
+# File: roles/python/tasks/system_packages.yml
+# Install distribution-specific base packages
+
+- block:
+  - name: ensuring packages are installed and up to date
+    apt:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items: "{{ python_system_packages[ansible_distribution] + extra_python_system_packages[ansible_distribution]}}"
+  become: yes
+  when: ansible_distribution == 'Ubuntu'

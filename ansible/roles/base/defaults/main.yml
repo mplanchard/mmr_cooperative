@@ -1,0 +1,42 @@
+---
+
+# File: roles/base/defaults.yml
+
+# Standard base users are defined in roles/base/vars/main.yml.
+# Additional users - this should be left empty and defined when the role is
+# specified. See http://docs.ansible.com/ansible/playbooks_roles.html#roles.
+# Extra users should be specified as a list of dict objects, and each object
+# should contain name, key, state, createhome, and groups attributes. Please
+# see the users in the the default `vars` directory for examples.
+
+extra_login_users: []
+
+# non_login_users have all the same attributes as login users, except for
+# `key`
+
+non_login_users: []
+
+# Standard base groups are defined in roles/base/vars/main.yml.
+# Additional groups. As with extra_login_users, this should be left empty and
+# defined when the role is specified, if necessary. Specified groups
+# should include a name, a state, and an attribute ``sudo`` (options yes/no)
+# indicating whether members of the group should have sudo access.
+
+extra_groups: []
+
+# Standard packages are defined in roles/base/vars/main.yml.
+# Define extra pacakges to install for various system types.
+# By default, the system type is equal to the ansible_distribution
+# fact, so ensure the name matches what is returned by the target
+# system. Specified packages should include a name and a state.
+# For example, to include extra package in a playbook that
+# usees this role:
+#
+#   roles:
+#     - name: base
+#       extra_packages:
+#         Ubuntu:
+#           - {name: cowsay, state: latest}
+
+extra_packages:
+  Ubuntu: []

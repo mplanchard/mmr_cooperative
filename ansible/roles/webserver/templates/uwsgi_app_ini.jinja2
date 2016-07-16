@@ -1,0 +1,13 @@
+# uwsgi user & group set by the emperor configuration
+
+[uwsgi]
+chmod-socket = 775
+socket = {{ uwsgi_socket_path }}
+module = {{ uwsgi_module }}:{{ uwsgi_callable }}
+virtualenv = {{ venv_directory }}
+chdir = {{ deploy_path }}
+plugins = python3,logfile
+processes = {{ uwsgi_processes }}
+threads = {{ uwsgi_threads }}
+logto = /var/log/uwsgi/{{ server_root_name }}.log
+lazy-apps = true

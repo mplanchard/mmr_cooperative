@@ -1,0 +1,13 @@
+---
+
+# File: roles/webserver/tasks/firewall.yml
+
+- block:
+  - name: adjust firewall settings for http/https traffic
+    ufw:
+      rule: "{{ item.rule }}"
+      port: "{{ item.port }}"
+      proto: "{{ item.proto }}"
+    with_items: "{{ webserver_ports }}"
+  become: yes
+  when: ansible_distribution == 'Ubuntu'

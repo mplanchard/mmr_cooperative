@@ -1,0 +1,75 @@
+---
+
+# File: roles/webserver/tasks/webserver.yml
+
+# This task assumes that the `server_root_name` variable has been set
+# somewhere, either at the group_vars level or when the role was called. The
+# variable set for `server_root_name` will be combined with the environment to
+# produce a proper server name, e.g. `billing-qa.i2.ihiji.net` in the vars
+# section of this role.
+
+# Note that the `cert_path` and `key_path` variables used by the template are
+# defined when the `ssl.yml` playbook in this role is run.
+
+
+- name: set dev/qa/staging server name
+  set_fact:
+    server_name: "{{ server_root_name }}-{{ deploy_environment }}.i2.ihiji.net"
+  when: deploy_environment in ['staging', 'qa', 'dev']
+- name: set production server name
+  set_fact:
+    server_name: "{{ server_root_name }}.ihiji.com"
+  when: deploy_environment == 'production'
+
+
+- name: deploy maintenance html file
+  become: yes
+  template:
+    src: maintenance.html.jinja2
+    dest: "{{ utility_doc_root }}"/maintenance.html
+    owner: root
+    group: "{{ web_group }}"
+    mode: 0644
+
+
+- name: deploy robots.txt file
+  become: yes
+  copy:
+    src: files/robots.txt
+    dest: "{{ utility_doc_root }}"/robots.txt
+    owner: root
+    group: "{{ web_group }}"
+    mode: 0444
+
+
+- block:
+  - name: ensure nginx service is enabled
+    service:
+      name: nginx
+      enabled: yes
+      state: started
+  - name: deploy maintenance site config to sites-available
+    template:
+      dest: /etc/nginx/sites-available/maintenance
+      owner: root
+      group: "{{ web_group }}"
+      src: nginx_maintenance.jinja2
+      backup: yes
+  - name: deploy nginx template to sites-available
+    template:
+      dest: /etc/nginx/sites-available/{{ server_root_name }}
+      owner: root
+      group: "{{ web_group }}"
+      src: nginx_site.jinja2
+      backup: yes
+    notify:
+      - restart nginx  # Only if template has changed
+  - name: link site config to sites-enabled
+    file:
+      src: /etc/nginx/sites-available/{{ server_root_name }}
+      path: /etc/nginx/sites-enabled/{{ server_root_name }}
+      state: link
+      owner: root
+      group: "{{ web_group }}"
+  become: yes
+  when: webserver == 'nginx'

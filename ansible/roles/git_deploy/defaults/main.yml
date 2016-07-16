@@ -1,0 +1,19 @@
+---
+
+# File: roles/git_deploy/defaults/main.yml
+
+# Default variables for the git_deploy role
+
+# The repo list should be a list of dict objects. Each object should contain
+# the following keys:
+#   dest: <dir> - the directory to which the git repository should be cloned
+#   repo: <name> - the name of the repository to be cloned
+#   version: <name> - the name of the branch to be cloned from `repo`
+repos: []
+
+git_update: yes  # Set to no for dev/vagrnat environments
+
+# Set a list of git_deploy_handlers to be run whenever the git repo(s) are
+# updated. Handlers must exist in `roles/git_deploy/handlers`
+
+git_deploy_handlers: []

@@ -1,0 +1,42 @@
+---
+
+# File: roles/webserver/tasks/protocol.yml
+
+# Task to enable webserver protocols (e.g. uwsgi)
+
+- block:
+  - name: ensure the old uwsgi-emperor service is disabled
+    service:
+      name: uwsgi-emperor
+      enabled: no
+      state: stopped
+  - name: ensure appropriate user has access to the logfile
+    file:
+      path: /var/log/uwsgi/{{ server_root_name }}.log
+      owner: "{{ uwsgi_user }}"
+      group: "{{ uwsgi_group }}"
+      state: touch
+  - name: place systemd configuration file
+    template:
+      src: emperor.uwsgi.service.jinja2
+      dest: /etc/systemd/system/emperor.uwsgi.service
+    notify:
+      - reload systemctl units
+      - restart emperor
+  - name: place uwsgi_emperor configuration file
+    template:
+      src: emperor.ini.jinja2
+      dest: /etc/uwsgi-emperor/emperor.ini
+    notify: restart emperor
+  - name: place uwsgi app vassal configuration file
+    template:
+      src: uwsgi_app_ini.jinja2
+      dest: /etc/uwsgi-emperor/vassals/{{ server_root_name }}.ini
+    notify: restart emperor
+  - name: ensure the emperor.uwsgi service is enabled & started
+    service:
+      name: emperor.uwsgi.service
+      enabled: yes
+      state: started
+  become: yes
+  when: protocol == 'uwsgi'

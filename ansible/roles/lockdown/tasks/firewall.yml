@@ -1,0 +1,22 @@
+---
+
+# File: roles/lockdown/tasks/firewall.yml
+
+- block:
+  - name: ensure ufw enabled
+    service:
+      name: ufw
+      enabled: yes
+      state: started
+  - name: allow specified traffic
+    ufw:
+      rule: "{{ item.rule }}"
+      port: "{{ item.port }}"
+      proto: "{{ item.proto }}"
+    with_items: "{{ open_ports + extra_open_ports }}"
+  - name: set default ufw policy
+    ufw:
+      state: enabled
+      policy: deny
+  become: yes
+  when: ansible_distribution == 'Ubuntu'

@@ -3,9 +3,10 @@
 ## Backend and Front-end Code for the MMR Cooperative
 
 This repository is designed to house everything we need for
-a fantastic website. The `server` directory will house the Python
-web server and API code, the `client` directory will house the
-`node` app, and the `static` directory will house static content.
+a fantastic website. The `server` directory will house the web server 
+and API code, the `client` directory will house the client javascript, 
+and the `static` directory will house static content. The `ansible`
+directory contains code for infrastructure deployment.
 
 More directories and stuff will be added as we go along. I like
 to use [ansible](http://www.ansible.com) to provision my web

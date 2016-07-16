@@ -1,0 +1,47 @@
+---
+
+# File: roles/git_deploy/tasks/main.yml
+
+# Deploy git repositories onto a host
+
+- include_vars: vault/git_rsa.yml
+
+- name: ensure ssh directory exists in case git user is not login
+  become: yes
+  file:
+    path: "/home/{{ git_user }}/.ssh"
+    state: directory
+    owner: "{{ git_user }}"
+    group: "{{ git_user }}"
+
+- name: copy ssh key
+  become: yes
+  copy:
+    dest: "{{ git_rsa_path }}"
+    content: "{{ key }}"
+    owner: "{{ git_user }}"
+    mode: 0400
+
+- name: check ownership of git repo(s)
+  become: yes
+  file:
+    path: "{{ item.dest }}"
+    recurse: yes
+    owner: "{{ item.user }}"
+    state: directory
+  with_items: "{{ repos }}"
+
+
+# Note that this step will fail if item.user does not have git access
+- name: deploy git repo(s)
+  become: yes
+  become_user: "{{ item.user }}"
+  git:
+    dest: "{{ item.dest }}"
+    repo: "{{ item.repo }}"
+    version: "{{ git_branch }}"  # Defined in group_vars
+    update: "{{ git_update }}"
+    key_file: "{{ git_rsa_path }}"
+    accept_hostkey: yes
+  with_items: "{{ repos }}"
+  notify: restart emperor

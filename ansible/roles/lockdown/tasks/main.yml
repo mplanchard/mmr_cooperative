@@ -1,0 +1,8 @@
+---
+
+- include: packages.yml
+- include: firewall.yml
+- include: sshd.yml
+
+
+
