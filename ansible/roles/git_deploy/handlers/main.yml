@@ -1,0 +1,9 @@
+---
+
+# File: roles/git_deploy/handlers/main.yml
+
+- name: restart emperor
+  become: yes
+  service:
+    name: emperor.uwsgi.service
+    state: restarted

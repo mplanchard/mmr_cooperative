@@ -1,0 +1,10 @@
+---
+
+# File: roles/lockdown/handlers/main.yml
+
+# Handlers for the lockdown role
+
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted

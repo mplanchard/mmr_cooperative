@@ -1,0 +1,10 @@
+---
+
+# File: roles/python/defaults/main.yml
+
+# Extra packages to be installed for a given ansible_distribution, e.g.
+# Ubuntu: [{name: cowsay, state: latest}]
+
+extra_python_system_packages:
+  Ubuntu: []
+

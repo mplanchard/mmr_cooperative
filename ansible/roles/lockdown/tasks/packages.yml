@@ -1,0 +1,12 @@
+---
+
+# File: roles/lockdown/tasks/packages.yml
+
+- block:
+  - name: ensuring packages are installed and up to date
+    apt:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items: "{{ packages[ansible_distribution] }}"
+  become: yes
+  when: ansible_distribution == 'Ubuntu'

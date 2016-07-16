@@ -1,0 +1,24 @@
+---
+
+# File: roles/webserver/defaults/main.yml
+
+webserver: nginx
+protocol: uwsgi
+
+setup_https: yes
+block_bots: no
+
+# Default packages to install
+
+extra_webserver_packages:
+  Ubuntu:
+    nginx: []
+
+extra_protocol_packages:
+  Ubuntu:
+    uwsgi: []
+
+
+# uwsgi settings (not used unless protocol is uwsgi)
+uwsgi_socket_path: /tmp/uwsgi.sock
+

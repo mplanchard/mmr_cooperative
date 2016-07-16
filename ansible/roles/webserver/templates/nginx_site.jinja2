@@ -1,0 +1,95 @@
+{% if protocol == "uwsgi" %}
+upstream uwsgicluster {
+  server unix:{{ uwsgi_socket_path }};
+}{% endif %}
+
+{% if block_bots %}# TODO:
+# SMAPI-233 adding the following map processing block.  Leaving this as
+# commented for now as it introduces processing overhead for each request.
+# In the future we may decide to use this approach for blocking robots
+map $http_user_agent $is_bot {
+  default 0;
+  ~*(google|bing|yandex|msnbot) 1;
+  ~*(AltaVista|Googlebot|Slurp|BlackWidow|Bot|ChinaClaw|Custo|DISCo) 1;
+  ~*(Download|Demon|eCatch|EirGrabber|EmailSiphon|EmailWolf|SuperHTTP) 1;
+  ~*(Surfbot|WebWhacker|Express|WebPictures|ExtractorPro|EyeNetIE) 1;
+  ~*(FlashGet|GetRight|GetWeb!|Go!Zilla|Go-Ahead-Got-It|GrabNet) 1;
+  ~*(Grafula|HMView|HTTrack|Stripper|Sucker|Indy|InterGET) 1;
+  ~*(Ninja|JetCar|Spider|larbin|LeechFTP|Downloader|tool|Navroad) 1;
+  ~*(NearSite|NetAnts|tAkeOut|WWWOFFLE) 1;
+  ~*(NetSpider|Vampire|NetZIP|Octopus|Offline|PageGrabber|Foto|pavuk) 1;
+  ~*(pcBrowser|RealDownload|ReGet|SiteSnagger|SmartDownload|SuperBot) 1;
+  ~*(WebSpider|Teleport|VoidEYE|Collector|WebAuto|WebCopier|WebFetch) 1;
+  ~*(WebGo|WebLeacher|WebReaper|WebSauger|eXtractor|Quester|WebStripper) 1;
+  ~*(WebZIP|Wget|Widow|Zeus|Twengabot|htmlparser|libwww|Python|perl) 1;
+  ~*(urllib|scan|Curl|email|PycURL|Pyth|PyQ|WebCollector|WebCopy|webcraw) 1;
+}{% endif %}
+
+{% if setup_https %}server {
+  listen       80;
+  server_name  {{ server_name }};
+  return       301 https://$server_name$request_uri;
+}
+
+server {
+  listen       443;
+  server_name  {{ server_name }};
+
+  ssl on;
+  ssl_certificate      {{ cert_path }};
+  ssl_certificate_key  {{ key_path }};
+
+  location / {
+{% if block_bots %}
+      if ($is_bot) {
+      return 403;
+    }
+{% endif %}
+{% if protocol == "uwsgi" %}
+    uwsgi_pass uwsgicluster;
+    include uwsgi_params;
+{% endif %}
+  }
+{% if static_path is defined %}
+
+  location /static {
+{% if block_bots %}
+    if ($is_bot) {
+      return 403;
+    }
+{% endif %}
+    root {{ static_path }};
+  }
+{% endif %}
+{% if block_bots %}
+
+  location /robots.txt {
+    alias /var/www/html/robots.txt;
+  }
+{% endif %}
+}
+{% else %}
+server {
+  listen    80;
+  server_name {{ server_name }};
+
+  location / {
+{% if protocol == "uwsgi" %}
+    uwsgi_pass uwsgicluster;
+    include uwsgi_params;
+{% endif %}
+  }
+{% if static_path is defined %}
+
+  location /static {
+    root {{ static_path }};
+  }
+{% endif %}
+{% if block_bots %}
+
+  location /robots.txt {
+    alias /var/www/html/robots.txt;
+  }
+{% endif %}
+}
+{% endif %}

@@ -1,0 +1,10 @@
+---
+
+# Install monit using the system package manager
+
+- name: install monit on Ubuntu
+  apt:
+    name: monit
+    state: latest
+  become: yes
+  when: ansible_distribution == 'Ubuntu'

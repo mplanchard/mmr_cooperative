@@ -1,0 +1,16 @@
+---
+
+# Packages:
+# Default pacakges to install for various system types
+# By defaults, the system type is equal to the ansible_distribution
+# fact, so ensure the name matches what is returned by the target
+# system
+
+packages:
+  Ubuntu:
+    - {name: fail2ban, state: latest}
+    - {name: ufw, state: latest}
+
+# Default open ports
+open_ports:
+  - {port: 22, proto: tcp, rule: allow}

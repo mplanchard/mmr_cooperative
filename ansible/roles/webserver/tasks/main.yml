@@ -1,0 +1,9 @@
+---
+
+# File: roles/webserver/tasks/main.yml
+
+- include: packages.yml
+- include: ssl.yml
+- include: firewall.yml
+- include: webserver.yml
+- include: protocol.yml

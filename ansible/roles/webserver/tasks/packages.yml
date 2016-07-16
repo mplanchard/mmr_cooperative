@@ -1,0 +1,18 @@
+---
+
+# File: roles/base/tasks/packages.yml
+# Install distribution-specific base packages
+
+- block:
+  - name: ensuring webserver packages are installed and up to date
+    apt:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items: "{{ webserver_packages[ansible_distribution][webserver] + extra_webserver_packages[ansible_distribution][webserver]}}"
+  - name: ensuring protocol packages are installed and up to date
+    apt:
+      name: "{{ item.name }}"
+      state: "{{ item.state }}"
+    with_items: "{{ protocol_packages[ansible_distribution][protocol]  + extra_protocol_packages[ansible_distribution][protocol]}}"
+  become: yes
+  when: ansible_distribution == 'Ubuntu'

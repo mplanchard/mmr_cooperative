@@ -1,0 +1,30 @@
+---
+
+# File: roles/lockdown/handlers/main.yml
+
+# Ensure the sshd service is configured, disallow password auth,
+# and disallow root login
+
+- block:
+  - name: check sshd configuration
+    service:
+      name: sshd
+      enabled: yes
+      state: started
+
+  - name: disallow password authentication
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+      state: present
+    notify: restart sshd
+
+  - name: disallow root SSH access
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+      state: present
+    notify: restart sshd
+  become: yes

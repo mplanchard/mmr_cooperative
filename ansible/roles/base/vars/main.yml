@@ -1,0 +1,44 @@
+---
+
+# File: roles/base/defaults.yml
+
+# Users:
+
+login_users:
+  - name: mplanchard
+    key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4YSX1gC0ycX62VYVf98FPTIYuDJdVe2fDXWgvIsuNdiW4WwAo+v2UmYB0HqimZBJOcLwO80OvI/Z4RL3C+zZRKLlCpibsK0KMNVuEBY4g/xQE2emp90GgxajG+9dqLPZy/U1FXZmDuCfpPBI/qL+oAUgVQJBSR9pMSlaikeIMWYNOFnw1CWdg4sA3vW9ZhPYIaHXl9vksaTeCD9G8ni9Y7lc2dF4U3sMClLjzy+gFoPM698bZPaC28X1x16GGy5mPSjn8DzwS8ZC1Eb5hDuXUgcjMJC1drAJ/W6JoI+J9PzNunsP4Umj62Cs4C6/IulUlJ575dAexPqWZNv/p5anh Nautilus@Nautilus.local
+    state: present
+    createhome: yes
+    groups: sysadmin,
+  - name: emcee_ache
+    key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC2TWAp5Byu3AhSt0V2khjN1w269Js0hK/5G6hL8Ne3iUyfi/J7/rWhhjNJSl5PW57eOQcxVqmAbj2OdFxsRcL8sIxpeIFRp2kYPOwio9OamOuObhX5+LOd37k66SEav0nMjlrT1kOb98gLJLSW4RcnxQ2cHXsvb9ETZqjlUtccKLNjUMGplT3dhg5/Zr7wh6fn2jsZkLpniy+41LKjxIGSVsouGmuKtn4YZbJrh1ygpZvbRIifej9+yBEFsmRL3XszkW88a2we4RGKM8LFqihPKLYlx5ZIsbcgasiHBE9RaahZe2PkQ5NRG5zk8g1+K0fkj+n96v7MKQOjW9lRy4F1PhqhVGyqktH2ijrADfLHbPC094osKmOHRjus3K/rxoS9IjDaF45fykH3/31VCSiYfe4Cd3EYOhjF9+d/TNhx+34xV/DE3sxPvhdw5fWEXT4RbizbOaJs4uI4LYRWE4PWSkZ628rsfPqX6wkgAHfG6WO3LbfivqQa3JAhWnlqJUagIuDXBo31dbwnYETKrha+mnfmrzW4GU+YoUNZC4uZsYI54iQc1b0PBSoZ8aJTIipR4bbqz2Ds4MR9F3aNn+AbYPb5pORCHcZs5m01QrwYUv7MsirigpY4lJNTh/urkJYtSmqFw78q88Kkhi1BMI3p33FJplVRl/UV4sBWMvFVRw== madison.carlisle.hicks@gmail.com
+    state: present
+    createhome: yes
+    groups: sysadmin,
+  - name: brekki
+    key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDw8GtO3GmN9qlvoD5ssEzK+8CSeT/gXIO+maBTPDS+C3WP5QapHGSFgXD8uVDNXp8L5L/Q2gpYDvkS40dqY8z2f3f1lcyI44TumMSppbsaLqrBGwwBW/GNfB42wdi1QKuwKgpZZDnHX17CfuS9qdcF3JLZvy/tOiu3kSfgGxKaLX50NYXD34U2ForM9BqMb9wWsin+McB+zFcNA0flJojSt1fedPxtDmzlIs69p/2wwFHKs0/XqPJs21Vh1KUnPK09QEtmyn2dqfcL9qggjFiPma9XGUWoNF43+0wVEJUoNcTU6dA5CMEttar0HJ2QfiS+bVBLkuDUpCWJTdYp8GKvm94a6nl6IlMaV/Xy9Tccc/45MS3y5/g7UzGrt5i/YqZhIE5r4dCDWGAfwc8DlP9CJZkYvl9ulVTeAjfuRpE/KnjJBUHjiQ2FIx3aOfioijczBvvIPUf3Yy+CUKC603QO2Cc7F/rGvFNaSHc6oATOJ+OeB2imCugCT+aJOnYfBJYjoBzta1A4GwmRVT5hqKTy3uPtx3aOoGoP9D/WqamtxC3qBTJ4yz/YK2hPdcBq0Cmq7FD+kl4q9qBMXRDNglk93geOMIVY/H8xodfhny5nffpTKHMN4WvHX5wxkCdxg0hKDI8MQMtEH/3iso+7yiTSszAyNofc9fxo6RlSd3sJDw== twinedthorns@gmail.com
+    state: present
+    createhome: yes
+    groups: sysadmin,
+
+
+# Groups
+
+managed_groups:
+  - name: sysadmin
+    sudo: yes
+    state: present
+
+
+# Packages
+# Default pacakges to install for various system types
+# By defaults, the system type is equal to the ansible_distribution
+# fact, so ensure the name matches what is returned by the target
+# system
+
+packages:
+  Ubuntu:
+    - {name: aptitude, state: latest}
+    - {name: build-essential, state: latest}
+    - {name: systemd, state: latest}
+

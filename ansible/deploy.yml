@@ -1,0 +1,8 @@
+---
+
+# Ansible playbook for deploying the web app
+
+- hosts: main
+  roles:
+  - base
+  - lockdown

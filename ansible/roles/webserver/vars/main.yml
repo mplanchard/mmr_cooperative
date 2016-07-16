@@ -1,0 +1,34 @@
+---
+
+# File: roles/webserver/vars/main.yml
+
+webserver_ports:
+  - port: 80
+    proto: tcp
+    rule: allow
+  - port: 443
+    proto: tcp
+    rule: allow
+
+# Default webserver packages
+
+webserver_packages:
+  Ubuntu:
+    nginx:
+      - name: nginx
+        state: latest
+
+# Default protocol packages
+
+protocol_packages:
+  Ubuntu:
+    uwsgi:
+      - name: uwsgi
+        state: latest
+      - name: uwsgi-emperor
+        state: latest
+      - name: uwsgi-plugin-python3
+        state: latest
+
+utility_doc_root: /var/www/html
+web_group: www-data

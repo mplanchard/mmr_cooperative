@@ -1,0 +1,35 @@
+---
+
+# File: roles/base/tasks/users.yml
+# Add login users and their public keys
+
+- name: manage login users
+  become: yes
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups }}"
+    createhome: "{{ item.createhome }}"
+    state: "{{ item.state }}"
+    shell: /bin/bash
+  with_items: "{{ login_users + extra_login_users }}"
+
+- name: add public keys for login users
+  become: yes
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.key }}"
+    state: "{{ item.state }}"
+  with_items: "{{ login_users + extra_login_users }}"
+
+
+# Add non-login users
+
+- name: manage non-login users
+  become: yes
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups }}"
+    createhome: "{{ item.createhome }}"
+    state: "{{ item.state }}"
+    shell: /bin/bash
+  with_items: "{{ non_login_users }}"

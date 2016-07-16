@@ -1,0 +1,19 @@
+---
+
+# File: roles/python/vars/main.yml
+
+# Packages:
+# Default pacakges to install for various system types
+# By defaults, the system type is equal to the ansible_distribution
+# fact, so ensure the name matches what is returned by the target
+# system
+
+python_system_packages:
+  Ubuntu:
+    - {name: build-essential, state: latest}
+    - {name: python-all, state: latest}
+    - {name: python-all-dev, state: latest}
+    - {name: python-virtualenv, state: latest}
+    - {name: python3-all, state: latest}
+    - {name: python3-all-dev, state: latest}
+    - {name: python3-virtualenv, state: latest}
